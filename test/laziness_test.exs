@@ -20,4 +20,8 @@ defmodule LazinessTest do
   test "convert empty stream to list" do
     assert L.to_list([]) == []
   end
+  
+  test "take" do
+    assert L.take(build_stream_with_sentinel, 2) |> L.to_list == [1, 2]
+  end
 end
