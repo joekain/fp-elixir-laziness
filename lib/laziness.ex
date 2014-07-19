@@ -30,4 +30,21 @@ defmodule Laziness do
   def take_while(%Cons{head: h, tail: t}, f) do
     if (f.(h.())), do: %Cons{head: h, tail: take_while(t, f)}, else: []
   end
+  
+  # Adapted from the text
+  def fold_right([], acc, _f), do: acc
+  def fold_right(%Cons{head: h, tail: t}, acc, f) do
+    f.(h.(), fn -> fold_right(t, acc, f) end)
+  end
+  
+  # Exercise 4
+  def for_all(s, f), do: fold_right(s, true, fn
+    (x, acc) -> f.(x) && acc.() end
+  )
+  
+  # Exercise 5
+  def take_while_via_fold(l, f), do: fold_right(l, [], fn
+    (x, acc) -> if  f.(x), do: [x | acc.()], else: [] end
+  )
+  
 end

@@ -32,4 +32,16 @@ defmodule LazinessTest do
   test "take_while" do
     assert L.take_while(build_stream_with_sentinel, &(&1 < 2)) |> L.to_list == [1]
   end
+  
+  test "for_all with matching stream" do
+    assert L.for_all(build_stream, &(&1 < 4)) == true
+  end
+
+  test "for_all with non-matching stream" do
+    assert L.for_all(build_stream_with_sentinel, &(&1 < 2)) == false
+  end
+  
+  test "take_while_via_fold" do
+    assert L.take_while_via_fold(build_stream_with_sentinel, &(&1 < 2)) == [1]
+  end
 end
