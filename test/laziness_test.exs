@@ -44,4 +44,12 @@ defmodule LazinessTest do
   test "take_while_via_fold" do
     assert L.take_while_via_fold(build_stream_with_sentinel, &(&1 < 2)) == [1]
   end
+  
+  test "head_option" do
+    assert L.head_option(build_stream_with_sentinel) == {:ok, 1}
+  end
+
+  test "head_option with empty list" do
+    assert L.head_option([]) == {:error, "Empty list"}
+  end
 end

@@ -46,5 +46,13 @@ defmodule Laziness do
   def take_while_via_fold(l, f), do: fold_right(l, [], fn
     (x, acc) -> if  f.(x), do: [x | acc.()], else: [] end
   )
-  
+
+  # This is an adaptation of the version given in the text
+  # def head_option([]), do: {:error, "Empty list"}
+  # def head_option([h, _t]), do: {:ok, h.()}
+
+  # This is my version written using fold_right.
+  def head_option(l), do: fold_right(l, {:error, "Empty list"}, fn
+    (x, acc) -> {:ok, x} end
+  )
 end
