@@ -25,4 +25,10 @@ defmodule Laziness do
   def drop([], n), do: []
   def drop(stream, 0), do: stream
   def drop(%Cons{head: _h, tail: t}, n), do: drop(t, n - 1)
+
+  # Exercise 4
+  def take_while([], _f), do: []
+  def take_while(%Cons{head: h, tail: t}, f) do
+    if (f.(h.())), do: %Cons{head: h, tail: take_while(t, f)}, else: []
+  end
 end
