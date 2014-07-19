@@ -1,0 +1,2 @@
+defmodule Laziness do
+end
