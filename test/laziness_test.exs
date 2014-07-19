@@ -24,4 +24,8 @@ defmodule LazinessTest do
   test "take" do
     assert L.take(build_stream_with_sentinel, 2) |> L.to_list == [1, 2]
   end
+  
+  test "drop" do
+    assert L.drop(build_stream, 2)|> L.to_list == [3]
+  end
 end
