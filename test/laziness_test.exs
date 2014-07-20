@@ -65,13 +65,13 @@ defmodule LazinessTest do
     assert L.map(build_stream_with_sentinel, &(&1 * &1)) |> L.take(2) |> L.to_list == [1, 4]
   end
 
-  # test "filter" do
-  #   assert L.filter(build_stream, &(&1 < 3)) |> L.to_list == [1, 2]
-  # end
-  #
-  # test "filter is lazy" do
-  #   assert L.filter(build_stream_with_sentinel, &(&1 < 3)) |> IO.inspect |> L.take(2) |> L.to_list == [1, 2]
-  # end
+  test "filter" do
+    assert L.filter(build_stream, &(&1 < 3)) |> L.to_list == [1, 2]
+  end
+
+  test "filter is lazy" do
+    assert L.filter(build_stream_with_sentinel, &(&1 < 3)) |> L.take(2) |> L.to_list == [1, 2]
+  end
 
   test "append" do
     assert L.append(build_stream, fn -> build_stream end) |> L.to_list == [1, 2, 3, 1, 2, 3]

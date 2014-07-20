@@ -27,7 +27,11 @@ defmodule Laziness do
   # Build up a new cons consisting of the elements to take
   def take([], _n), do: []
   def take(%Cons{head: h, tail: t}, n) do
-    if (n > 0), do: %Cons{head: h, tail: ld( take(t.(), n - 1) )}, else: []
+    if (n > 1) do
+      %Cons{head: h, tail: ld( take(t.(), n - 1) )}
+    else
+      %Cons{head: h, tail: ld([])}
+    end
   end
   
   def drop([], n), do: []
@@ -72,6 +76,11 @@ defmodule Laziness do
     (x, acc) -> %Cons{head: ld(f.(x)), tail: acc} end
   )
   
+  # Exercise 7 - filter
+  def filter(s, f), do: fold_right(s, ld([]), fn
+    (x, acc) -> if f.(x), do: cons(x, acc.()), else: acc.() end
+  )
+    
   # Exercise 7 - append
   def append(s1, s2), do: fold_right(s1, s2, fn
     (x, acc) -> cons(x, acc.()) end
