@@ -86,4 +86,9 @@ defmodule Laziness do
     (x, acc) -> cons(x, acc.()) end
   )
   
+  # Exercise 7 - flat_map
+  # f.(x) will return a Cons and we must apend the acc to the new Cons
+  def flat_map(s, f), do: fold_right(s, ld([]), fn
+    (x, acc) -> append(f.(x), acc) end
+  )
 end

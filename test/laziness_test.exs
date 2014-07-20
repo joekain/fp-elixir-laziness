@@ -76,4 +76,18 @@ defmodule LazinessTest do
   test "append" do
     assert L.append(build_stream, fn -> build_stream end) |> L.to_list == [1, 2, 3, 1, 2, 3]
   end
+  
+  test "flat_map" do
+    fun = fn
+      (x) -> L.cons(x, L.cons(x*x, []))
+    end
+    assert L.flat_map(build_stream, fun)|> L.to_list == [1, 1, 2, 4, 3, 9]
+  end
+  
+  test "flat_map is lazy" do
+    fun = fn
+      (x) -> L.cons(x, L.cons(x*x, []))
+    end
+    assert L.flat_map(build_stream_with_sentinel, fun)|> L.take(6) |> L.to_list == [1, 1, 2, 4, 3, 9]
+  end
 end
