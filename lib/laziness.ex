@@ -16,7 +16,7 @@ defmodule Laziness do
     end
   end
   
-  defp terminal, do: fn -> [] end
+  def terminal, do: fn -> [] end
   
   # Exercise 1
   def to_list([]), do: []
@@ -30,7 +30,7 @@ defmodule Laziness do
     if (n > 1) do
       %Cons{head: h, tail: ld( take(t.(), n - 1) )}
     else
-      %Cons{head: h, tail: ld([])}
+      %Cons{head: h, tail: terminal}
     end
   end
   
@@ -58,7 +58,7 @@ defmodule Laziness do
   )
   
   # Exercise 5
-  def take_while_via_fold(l, f), do: fold_right(l, ld([]), fn
+  def take_while_via_fold(l, f), do: fold_right(l, terminal, fn
     (x, acc) -> if  f.(x), do: cons(x, acc.()), else: [] end
   )
 
@@ -72,12 +72,12 @@ defmodule Laziness do
   )
   
   # Exercise 7 - map
-   def map(s, f), do: fold_right(s, ld([]), fn
+   def map(s, f), do: fold_right(s, terminal, fn
     (x, acc) -> %Cons{head: ld(f.(x)), tail: acc} end
   )
   
   # Exercise 7 - filter
-  def filter(s, f), do: fold_right(s, ld([]), fn
+  def filter(s, f), do: fold_right(s, terminal, fn
     (x, acc) -> if f.(x), do: cons(x, acc.()), else: acc.() end
   )
     
@@ -88,7 +88,7 @@ defmodule Laziness do
   
   # Exercise 7 - flat_map
   # f.(x) will return a Cons and we must apend the acc to the new Cons
-  def flat_map(s, f), do: fold_right(s, ld([]), fn
+  def flat_map(s, f), do: fold_right(s, terminal, fn
     (x, acc) -> append(f.(x), acc) end
   )
 end
