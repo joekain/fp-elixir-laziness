@@ -24,7 +24,7 @@ defmodule LazinessTest do
   test "take" do
     assert L.take(build_stream_with_sentinel, 2) |>  L.to_list == [1, 2]
   end
-  
+
   test "drop" do
     assert L.drop(build_stream, 2)|> L.to_list == [3]
   end
@@ -42,7 +42,11 @@ defmodule LazinessTest do
   end
 
   test "take_while_via_fold" do
-    assert L.take_while_via_fold(build_stream_with_sentinel, &(&1 < 2)) == [1]
+    assert L.take_while_via_fold(build_stream_with_sentinel, &(&1 < 2)) |> L.to_list == [1]
+  end
+  
+  test "take_while_via_fold for an entire stream" do
+    assert L.take_while_via_fold(build_stream, fn (x) -> true end) |> L.to_list == [1, 2, 3]
   end
 
   test "head_option" do
@@ -52,7 +56,7 @@ defmodule LazinessTest do
   test "head_option with empty list" do
     assert L.head_option([]) == {:error, "Empty list"}
   end
-  
+
   test "map" do
     assert L.map(build_stream, &(&1 * &1))|> L.to_list == [1, 4, 9]
   end
@@ -61,4 +65,15 @@ defmodule LazinessTest do
     assert L.map(build_stream_with_sentinel, &(&1 * &1)) |> L.take(2) |> L.to_list == [1, 4]
   end
 
+  # test "filter" do
+  #   assert L.filter(build_stream, &(&1 < 3)) |> L.to_list == [1, 2]
+  # end
+  #
+  # test "filter is lazy" do
+  #   assert L.filter(build_stream_with_sentinel, &(&1 < 3)) |> IO.inspect |> L.take(2) |> L.to_list == [1, 2]
+  # end
+
+  test "append" do
+    assert L.append(build_stream, fn -> build_stream end) |> L.to_list == [1, 2, 3, 1, 2, 3]
+  end
 end

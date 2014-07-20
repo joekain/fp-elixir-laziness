@@ -21,6 +21,7 @@ defmodule Laziness do
   # Exercise 1
   def to_list([]), do: []
   def to_list(%Cons{ head: h, tail: t}), do: [ h.() | to_list(t.()) ]
+  #def to_list(f), do: f.()
 
   # Exercise 2
   # Build up a new cons consisting of the elements to take
@@ -40,19 +41,21 @@ defmodule Laziness do
   end
   
   # Adapted from the text
-  def fold_right([], acc, _f), do: acc
+  # It wasn't until I worked through problems with append in Ex7 that I realized
+  # I needed to evaluate acc.() in the base case.
+  def fold_right([], acc, _f), do: acc.()
   def fold_right(%Cons{head: h, tail: t}, acc, f) do
     f.(h.(), fn -> fold_right(t.(), acc, f) end)
   end
   
   # Exercise 4
-  def for_all(s, f), do: fold_right(s, true, fn
+  def for_all(s, f), do: fold_right(s, ld(true), fn
     (x, acc) -> f.(x) && acc.() end
   )
   
   # Exercise 5
-  def take_while_via_fold(l, f), do: fold_right(l, [], fn
-    (x, acc) -> if  f.(x), do: [x | acc.()], else: [] end
+  def take_while_via_fold(l, f), do: fold_right(l, ld([]), fn
+    (x, acc) -> if  f.(x), do: cons(x, acc.()), else: [] end
   )
 
   # This is an adaptation of the version given in the text
@@ -60,14 +63,18 @@ defmodule Laziness do
   # def head_option([h, _t]), do: {:ok, h.()}
 
   # This is my version written using fold_right.
-  def head_option(l), do: fold_right(l, {:error, "Empty list"}, fn
+  def head_option(l), do: fold_right(l, ld({:error, "Empty list"}), fn
     (x, acc) -> {:ok, x} end
   )
   
   # Exercise 7 - map
-  # I realize I've made a mistake, tail needs to be lazy
-  def map(s, f), do: fold_right(s, [], fn
+   def map(s, f), do: fold_right(s, ld([]), fn
     (x, acc) -> %Cons{head: ld(f.(x)), tail: acc} end
   )
-
+  
+  # Exercise 7 - append
+  def append(s1, s2), do: fold_right(s1, s2, fn
+    (x, acc) -> cons(x, acc.()) end
+  )
+  
 end
