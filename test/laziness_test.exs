@@ -46,7 +46,7 @@ defmodule LazinessTest do
   end
   
   test "take_while_via_fold for an entire stream" do
-    assert L.take_while_via_fold(build_stream, fn (x) -> true end) |> L.to_list == [1, 2, 3]
+    assert L.take_while_via_fold(build_stream, fn (_x) -> true end) |> L.to_list == [1, 2, 3]
   end
 
   test "head_option" do

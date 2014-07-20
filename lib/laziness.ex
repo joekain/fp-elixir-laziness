@@ -34,7 +34,7 @@ defmodule Laziness do
     end
   end
   
-  def drop([], n), do: []
+  def drop([], _n), do: []
   def drop(stream, 0), do: stream
   def drop(%Cons{head: _h, tail: t}, n), do: drop(t.(), n - 1)
 
@@ -68,7 +68,7 @@ defmodule Laziness do
 
   # This is my version written using fold_right.
   def head_option(l), do: fold_right(l, ld({:error, "Empty list"}), fn
-    (x, acc) -> {:ok, x} end
+    (x, _acc) -> {:ok, x} end
   )
   
   # Exercise 7 - map
