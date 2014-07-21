@@ -25,13 +25,8 @@ defmodule Laziness do
   # Exercise 2
   # Build up a new cons consisting of the elements to take
   def take([], _n), do: []
-  def take(%Cons{head: h, tail: t}, n) do
-    if (n > 1) do
-      %Cons{head: h, tail: ld( take(t.(), n - 1) )}
-    else
-      %Cons{head: h, tail: terminal}
-    end
-  end
+  def take(%Cons{head: h, tail: t}, n) when n <= 1, do: %Cons{head: h, tail: terminal}
+  def take(%Cons{head: h, tail: t}, n) when n > 1, do: %Cons{head: h, tail: ld( take(t.(), n - 1) )}
   
   def drop([], _n), do: []
   def drop(stream, 0), do: stream
