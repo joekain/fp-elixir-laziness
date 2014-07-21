@@ -21,7 +21,6 @@ defmodule Laziness do
   # Exercise 1
   def to_list([]), do: []
   def to_list(%Cons{ head: h, tail: t}), do: [ h.() | to_list(t.()) ]
-  #def to_list(f), do: f.()
 
   # Exercise 2
   # Build up a new cons consisting of the elements to take
