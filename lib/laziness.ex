@@ -46,18 +46,18 @@ defmodule Laziness do
   # Adapted from the text
   # It wasn't until I worked through problems with append in Ex7 that I realized
   # I needed to evaluate acc.() in the base case.
-  def fold_right([], acc, _f), do: acc.()
-  def fold_right(%Cons{head: h, tail: t}, acc, f) do
-    f.(h.(), fn -> fold_right(t.(), acc, f) end)
+  def foldr([], acc, _f), do: acc.()
+  def foldr(%Cons{head: h, tail: t}, acc, f) do
+    f.(h.(), fn -> foldr(t.(), acc, f) end)
   end
   
   # Exercise 4
-  def for_all(s, f), do: fold_right(s, ld(true), fn
+  def for_all(s, f), do: foldr(s, ld(true), fn
     (x, acc) -> f.(x) && acc.() end
   )
   
   # Exercise 5
-  def take_while_via_fold(l, f), do: fold_right(l, terminal, fn
+  def take_while_via_fold(l, f), do: foldr(l, terminal, fn
     (x, acc) -> if  f.(x), do: cons(x, acc.()), else: [] end
   )
 
@@ -65,29 +65,29 @@ defmodule Laziness do
   # def head_option([]), do: {:error, "Empty list"}
   # def head_option([h, _t]), do: {:ok, h.()}
 
-  # This is my version written using fold_right.
-  def head_option(l), do: fold_right(l, ld({:error, "Empty list"}), fn
+  # This is my version written using foldr.
+  def head_option(l), do: foldr(l, ld({:error, "Empty list"}), fn
     (x, _acc) -> {:ok, x} end
   )
   
   # Exercise 7 - map
-   def map(s, f), do: fold_right(s, terminal, fn
+   def map(s, f), do: foldr(s, terminal, fn
     (x, acc) -> %Cons{head: ld(f.(x)), tail: acc} end
   )
   
   # Exercise 7 - filter
-  def filter(s, f), do: fold_right(s, terminal, fn
+  def filter(s, f), do: foldr(s, terminal, fn
     (x, acc) -> if f.(x), do: cons(x, acc.()), else: acc.() end
   )
     
   # Exercise 7 - append
-  def append(s1, s2), do: fold_right(s1, s2, fn
+  def append(s1, s2), do: foldr(s1, s2, fn
     (x, acc) -> cons(x, acc.()) end
   )
   
   # Exercise 7 - flat_map
   # f.(x) will return a Cons and we must apend the acc to the new Cons
-  def flat_map(s, f), do: fold_right(s, terminal, fn
+  def flat_map(s, f), do: foldr(s, terminal, fn
     (x, acc) -> append(f.(x), acc) end
   )
 end
