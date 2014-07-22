@@ -13,6 +13,10 @@ defmodule LazinessTest do
     L.cons(1, L.cons(2, L.cons(3, L.cons(raise("sentinel reached"), []))))
   end
   
+  def build_infinite_stream_of_ones do
+    L.cons(1, build_infinite_stream_of_ones)
+  end
+  
   test "convert stream to list" do
     assert L.to_list(build_stream) == [1, 2, 3]
   end
@@ -89,5 +93,33 @@ defmodule LazinessTest do
       (x) -> L.cons(x, L.cons(x*x, []))
     end
     assert L.flat_map(build_stream_with_sentinel, fun)|> L.take(6) |> L.to_list == [1, 1, 2, 4, 3, 9]
+  end
+  
+  test "map is lazy on infinite streams" do
+    assert L.map(build_infinite_stream_of_ones, &(&1 * 2)) |> L.take(5) |> L.to_list == [2, 2, 2, 2, 2]
+  end
+  
+  test "take_while is lazy on infinite streams" do
+    assert L.take_while_via_fold(build_infinite_stream_of_ones, &(&1 == 1)) |> L.take(5) |> L.to_list == [1, 1, 1, 1, 1]
+  end
+
+  test "for_all is lazy on infinite streams" do
+    assert L.for_all(build_infinite_stream_of_ones, &(&1 != 1)) == false
+  end
+  
+  test "build_stream_of_constant" do
+    assert L.build_stream_of_constant(7) |> L.take(5) |> L.to_list == [7, 7, 7, 7, 7]
+  end
+  
+  test "build_counting_stream" do
+    assert L.build_counting_stream(7) |> L.take(5) |> L.to_list == [7, 8, 9, 10, 11]
+  end
+  
+  test "build_fib_stream" do
+    assert L.build_fib_stream |> L.take(7) |> L.to_list == [0, 1, 1, 2, 3, 5, 8]
+  end
+  
+  test "unfold" do
+    assert L.unfold(1, &({&1 * &1, &1 + 1})) |> L.take(5) |> L.to_list == [1, 4, 9, 16, 25]
   end
 end

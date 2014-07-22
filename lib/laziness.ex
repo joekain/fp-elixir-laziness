@@ -85,4 +85,19 @@ defmodule Laziness do
   def flat_map(s, f), do: foldr(s, terminal, fn
     (x, acc) -> append(f.(x), acc) end
   )
+  
+  # Exercise 8 - general constant stream
+  def build_stream_of_constant(n), do: cons(n, build_stream_of_constant(n))
+  
+  # Exercise 9 - counting stream
+  def build_counting_stream(n), do: cons(n, build_counting_stream(n + 1))
+  
+  # Exercise 10 - fibs
+  def build_fib_stream(n \\ 0, m \\ 1), do: cons(n, build_fib_stream(m, n + m))
+  
+  # Exercise 11 - unfold
+  def unfold(acc, f) do
+    {v, new_acc} = f.(acc)
+    cons(v, unfold(new_acc, f))
+  end
 end
