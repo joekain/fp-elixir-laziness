@@ -161,4 +161,12 @@ defmodule LazinessTest do
   test "take_via_unfold" do
     assert L.take_via_unfold(build_stream_with_sentinel, 3) |>  L.to_list == [1, 2, 3]
   end
+  
+  test "take_while_via_unfold" do
+    assert L.take_while_via_unfold(build_stream_with_sentinel, &(&1 < 2)) |> L.to_list == [1]
+  end
+  
+  test "take_while_via_unfold for an entire stream" do
+    assert L.take_while_via_unfold(build_stream, fn (_x) -> true end) |> L.to_list == [1, 2, 3]
+  end
 end

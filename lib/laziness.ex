@@ -127,4 +127,10 @@ defmodule Laziness do
     ({_s, 0}) -> nil
     ({%Cons{head: h, tail: t}, n}) -> {h.(), {t.(), n - 1}}
   end)
+  
+  # Exercise 13 - take_via_unfold
+  def take_while_via_unfold(s, f), do: unfold({s, f}, fn
+    ({[], f}) -> nil
+    ({%Cons{head: h, tail: t}, f}) -> if f.(h.()), do: {h.(), {t.(), f}}, else: nil
+  end)
 end
