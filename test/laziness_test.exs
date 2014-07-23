@@ -124,7 +124,10 @@ defmodule LazinessTest do
   end
   
   test "unfold should terminate when function returns nil" do
-    assert L.unfold(1, &({(if &1 <= 5, do: &1, else: nil), &1 + 1})) |> L.to_list == [1, 2, 3, 4, 5]
+    assert L.unfold(1, fn
+      (6) -> nil
+      (x) -> {x, x + 1}
+    end) |> L.to_list == [1, 2, 3, 4, 5]
   end
   
   test "fibs_via_unfold" do
@@ -142,6 +145,16 @@ defmodule LazinessTest do
   test "ones_via_unfold" do
     assert L.ones_via_unfold |> L.take(5) |> L.to_list == [1, 1, 1, 1, 1]
   end
-  
 
+  test "map_via_unfold" do
+    assert L.map_via_unfold(build_stream, &(&1 * &1))|> L.to_list == [1, 4, 9]
+  end
+
+  test "map_via_unfold is lazy" do
+    assert L.map_via_unfold(build_stream_with_sentinel, &(&1 * &1)) |> L.take(2) |> L.to_list == [1, 4]
+  end
+  
+  test "map_via_unfold is lazy on infinite streams" do
+    assert L.map_via_unfold(build_infinite_stream_of_ones, &(&1 * 2)) |> L.take(5) |> L.to_list == [2, 2, 2, 2, 2]
+  end
 end

@@ -97,11 +97,9 @@ defmodule Laziness do
   
   # Exercise 11 - unfold
   def unfold(acc, f) do
-    {v, new_acc} = f.(acc)
-    if v == nil do
-      []
-    else
-      cons(v, unfold(new_acc, f))
+    case f.(acc) do
+      nil -> []
+      {v, new_acc} -> cons(v, unfold(new_acc, f))
     end
   end
   
@@ -116,4 +114,11 @@ defmodule Laziness do
   
   # Exercise 12 - ones_via_unfold
   def ones_via_unfold, do: constant_via_unfold(1)
+
+
+  # Exercise 13 - map_via_unfold
+  def map_via_unfold(s, f), do: unfold(s, fn
+    ([]) -> nil
+    (%Cons{head: h, tail: t}) -> { f.(h.()), t.() } end
+  )
 end
