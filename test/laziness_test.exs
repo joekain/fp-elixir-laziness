@@ -157,4 +157,8 @@ defmodule LazinessTest do
   test "map_via_unfold is lazy on infinite streams" do
     assert L.map_via_unfold(build_infinite_stream_of_ones, &(&1 * 2)) |> L.take(5) |> L.to_list == [2, 2, 2, 2, 2]
   end
+  
+  test "take_via_unfold" do
+    assert L.take_via_unfold(build_stream_with_sentinel, 3) |>  L.to_list == [1, 2, 3]
+  end
 end
