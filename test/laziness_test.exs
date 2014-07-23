@@ -122,4 +122,22 @@ defmodule LazinessTest do
   test "unfold" do
     assert L.unfold(1, &({&1 * &1, &1 + 1})) |> L.take(5) |> L.to_list == [1, 4, 9, 16, 25]
   end
+  
+  test "fibs_via_unfold" do
+    assert L.fibs_via_unfold |> L.take(7) |> L.to_list == [0, 1, 1, 2, 3, 5, 8]
+  end
+
+  test "from_via_unfold" do
+    assert L.from_via_unfold(7) |> L.take(5) |> L.to_list == [7, 8, 9, 10, 11]
+  end
+  
+  test "constant_via_unfold" do
+    assert L.constant_via_unfold(7) |> L.take(5) |> L.to_list == [7, 7, 7, 7, 7]
+  end
+  
+  test "ones_via_unfold" do
+    assert L.ones_via_unfold |> L.take(5) |> L.to_list == [1, 1, 1, 1, 1]
+  end
+  
+
 end

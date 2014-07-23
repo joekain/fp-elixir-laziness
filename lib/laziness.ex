@@ -100,4 +100,16 @@ defmodule Laziness do
     {v, new_acc} = f.(acc)
     cons(v, unfold(new_acc, f))
   end
+  
+  # Exercise 12 - fibs using unfold
+  def fibs_via_unfold(), do: unfold({0, 1}, fn ({n, m}) -> {n, {m, n + m}} end)
+  
+  # Exercise 12 - from_via_unfold
+  def from_via_unfold(n), do: unfold(n, fn (x) -> {x, x + 1} end)
+  
+  # Exercise 12 - constant_via_unfold
+  def constant_via_unfold(n), do: unfold(n, fn (x) -> {x, x} end)
+  
+  # Exercise 12 - ones_via_unfold
+  def ones_via_unfold, do: constant_via_unfold(1)
 end
