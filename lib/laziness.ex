@@ -98,7 +98,11 @@ defmodule Laziness do
   # Exercise 11 - unfold
   def unfold(acc, f) do
     {v, new_acc} = f.(acc)
-    cons(v, unfold(new_acc, f))
+    if v == nil do
+      []
+    else
+      cons(v, unfold(new_acc, f))
+    end
   end
   
   # Exercise 12 - fibs using unfold
