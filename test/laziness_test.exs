@@ -193,4 +193,17 @@ defmodule LazinessTest do
     assert L.zip_all_via_unfold(build_infinite_stream_of_ones, build_infinite_stream_of_ones) |> L.take(4)
            |> L.to_list == [{{:ok, 1}, {:ok, 1},}, {{:ok, 1}, {:ok, 1},}, {{:ok, 1}, {:ok, 1}}, {{:ok, 1}, {:ok, 1}}]
   end
+  
+  test "starts_with" do
+    assert L.starts_with(build_stream, L.cons(1, L.cons(2, []))) == true
+  end
+  
+  test "starts_with on an infinite stream" do
+    assert L.starts_with(build_infinite_stream_of_ones, L.cons(1, L.cons(1, []))) == true
+  end
+
+  test "starts_with with mismatched stream" do
+    assert L.starts_with(build_infinite_stream_of_ones, L.cons(1, L.cons(2, []))) == false
+  end
+  
 end

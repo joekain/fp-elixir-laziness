@@ -148,4 +148,13 @@ defmodule Laziness do
     ({ %Cons{head: h1, tail: t1},[] }) -> {{ {:ok, h1.()}, :error }, {t1.(), []} }
     ({ %Cons{head: h1, tail: t1}, %Cons{head: h2, tail: t2} }) -> {{ {:ok, h1.()}, {:ok, h2.()} }, {t1.(), t2.()} }
   end)
+  
+  
+  # Exercise 14 - starts_with
+  def starts_with(s, prefix), do: zip_all_via_unfold(s, prefix)
+    |> foldr(ld(true), fn 
+      ({ {:ok, _a}, :error },    _acc) -> true
+      ({ {:ok, a}, {:ok, a} },    acc) -> acc.()
+      ({ {:ok, _a}, {:ok, _b} }, _acc) -> false
+  end)
 end
