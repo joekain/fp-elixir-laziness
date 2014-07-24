@@ -140,4 +140,12 @@ defmodule Laziness do
     ({_,[]}) -> nil
     ({ %Cons{head: h1, tail: t1}, %Cons{head: h2, tail: t2} }) -> { {h1.(), h2.()}, {t1.(), t2.()} }
   end)
+  
+  # Excercise 13 - zip_all_via_unfold
+  def zip_all_via_unfold(s1, s2), do: unfold({s1, s2}, fn
+    ({[],[]}) -> nil
+    ({ [],%Cons{head: h2, tail: t2} }) -> {{ :error, {:ok, h2.()} }, {[], t2.()} }
+    ({ %Cons{head: h1, tail: t1},[] }) -> {{ {:ok, h1.()}, :error }, {t1.(), []} }
+    ({ %Cons{head: h1, tail: t1}, %Cons{head: h2, tail: t2} }) -> {{ {:ok, h1.()}, {:ok, h2.()} }, {t1.(), t2.()} }
+  end)
 end

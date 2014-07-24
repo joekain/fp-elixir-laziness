@@ -178,4 +178,19 @@ defmodule LazinessTest do
   test "zip_via_unfold for finite streams" do
     assert L.zip_via_unfold(build_stream, build_stream) |> L.to_list == [{1, 1,}, {2, 2,}, {3, 3}]
   end
+  
+  test "zip_all_via_unfold" do
+    assert L.zip_all_via_unfold(build_stream, build_infinite_stream_of_ones) |> L.take(4)
+           |> L.to_list == [{{:ok, 1}, {:ok, 1},}, {{:ok, 2}, {:ok, 1},}, {{:ok, 3}, {:ok, 1}}, {:error, {:ok, 1}}]
+  end
+  
+  test "zip_all_via_unfold streams reversed" do
+    assert L.zip_all_via_unfold(build_infinite_stream_of_ones, build_stream) |> L.take(4)
+           |> L.to_list == [{{:ok, 1}, {:ok, 1},}, {{:ok, 1}, {:ok, 2},}, {{:ok, 1}, {:ok, 3}}, {{:ok, 1}, :error}]
+  end
+  
+  test "zip_all_via_unfold infinite streams lists" do
+    assert L.zip_all_via_unfold(build_infinite_stream_of_ones, build_infinite_stream_of_ones) |> L.take(4)
+           |> L.to_list == [{{:ok, 1}, {:ok, 1},}, {{:ok, 1}, {:ok, 1},}, {{:ok, 1}, {:ok, 1}}, {{:ok, 1}, {:ok, 1}}]
+  end
 end
