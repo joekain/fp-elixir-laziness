@@ -133,4 +133,11 @@ defmodule Laziness do
     ({[], f}) -> nil
     ({%Cons{head: h, tail: t}, f}) -> if f.(h.()), do: {h.(), {t.(), f}}, else: nil
   end)
+  
+  # Excercise 13 - zip_via_unfold
+  def zip_via_unfold(s1, s2), do: unfold({s1, s2}, fn
+    ({[],_}) -> nil
+    ({_,[]}) -> nil
+    ({ %Cons{head: h1, tail: t1}, %Cons{head: h2, tail: t2} }) -> { {h1.(), h2.()}, {t1.(), t2.()} }
+  end)
 end

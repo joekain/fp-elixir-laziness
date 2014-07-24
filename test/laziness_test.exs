@@ -169,4 +169,13 @@ defmodule LazinessTest do
   test "take_while_via_unfold for an entire stream" do
     assert L.take_while_via_unfold(build_stream, fn (_x) -> true end) |> L.to_list == [1, 2, 3]
   end
+  
+  test "zip_via_unfold for infinite streams" do
+    assert L.zip_via_unfold(L.fibs_via_unfold, L.constant_via_unfold(3))
+           |> L.take(3) |> L.to_list == [{0,3}, {1,3}, {1,3}]
+  end
+  
+  test "zip_via_unfold for finite streams" do
+    assert L.zip_via_unfold(build_stream, build_stream) |> L.to_list == [{1, 1,}, {2, 2,}, {3, 3}]
+  end
 end
