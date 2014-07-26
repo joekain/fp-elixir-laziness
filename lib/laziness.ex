@@ -157,4 +157,10 @@ defmodule Laziness do
       ({ {:ok, a}, {:ok, a} },    acc) -> acc.()
       ({ {:ok, _a}, {:ok, _b} }, _acc) -> false
   end)
+  
+  # Exercise 14 - tails
+  def tails(s), do: unfold(s, fn
+    ([]) -> nil
+    (%Cons{head: h, tail: t}) -> { cons(h.(), t.()), t.() }
+  end)
 end

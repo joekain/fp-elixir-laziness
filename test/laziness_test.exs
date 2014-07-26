@@ -206,4 +206,7 @@ defmodule LazinessTest do
     assert L.starts_with(build_infinite_stream_of_ones, L.cons(1, L.cons(2, []))) == false
   end
   
+  test "tails" do
+    assert L.tails(build_stream) |> L.flat_map(&(&1)) |> L.to_list == [1, 2, 3,  2, 3,  3]
+  end
 end
