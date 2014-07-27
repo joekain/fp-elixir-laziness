@@ -209,4 +209,18 @@ defmodule LazinessTest do
   test "tails" do
     assert L.tails(build_stream) |> L.flat_map(&(&1)) |> L.to_list == [1, 2, 3,  2, 3,  3]
   end
+  
+  test "scan" do
+    assert L.scan(build_stream, 0, &(&1 + &2)) |> L.to_list == [6, 5, 3, 0]
+  end
+
+  test "scan should reuse intermediate results" do
+    {:ok, counter} = Agent.start_link(fn -> 0 end)
+    count_calls = fn
+      (_, _) -> Agent.get_and_update(counter, fn (current) -> {current + 1, current + 1} end)
+
+    end
+
+    assert L.scan(build_stream, 0, count_calls) |> L.to_list == [3, 2, 1, 0]
+  end
 end

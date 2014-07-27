@@ -66,7 +66,7 @@ defmodule Laziness do
   )
   
   # Exercise 7 - map
-   def map(s, f), do: foldr(s, terminal, fn
+  def map(s, f), do: foldr(s, terminal, fn
     (x, acc) -> %Cons{head: ld(f.(x)), tail: acc} end
   )
   
@@ -158,9 +158,46 @@ defmodule Laziness do
       ({ {:ok, _a}, {:ok, _b} }, _acc) -> false
   end)
   
-  # Exercise 14 - tails
+  # Exercise 15 - tails
   def tails(s), do: unfold(s, fn
     ([]) -> nil
     (%Cons{head: h, tail: t}) -> { cons(h.(), t.()), t.() }
   end)
+  
+  
+  # Exercise 16 - scan
+  #   Can this be implemented using unfold?  I don't think it can be implemented
+  #   using unfold efficiently as unfold runs through the list in the wrong order
+  #   which would make it impossible to reuse the partial results.
+  
+  # Here's an inefficient version using unfold.  It calls foldr each time and isn't able to reuse the result.
+  # def scan(s, acc, f), do: unfold(s, fn
+  #   (:terminate) -> nil
+  #   ([]) -> {0, :terminate}
+  #   (%Cons{head: h, tail: t}) -> { foldr(cons(h.(), t.()), ld(acc), fn (x, acc) -> f.(x, acc.()) end), t.() }
+  # end)
+  
+  # I tried using foldr and build something the same as the above.  Then I tried a direct recursive solution but it is
+  # also inefficient.  I ended writing a specific test to determine that this was inefficient.
+  # def scan([], acc, f), do: cons(acc, [])
+  # def scan(%Cons{head: h, tail: t}, acc, f) do
+  #   IO.puts "scan #{h.()}"
+  #   %Cons{head: next_h, tail: next_t} = scan(t.(), acc, f)
+  #   cons(f.(h.(), next_h.()), %Cons{head: next_h, tail: next_t})
+  # end
+  
+  # I finally looked at the text's solution which uses foldr.  The key is to have more state in the fold than just the 
+  # resulting stream.  Then extract the stream and return it.
+  # In this case the foldr builds up a tuple containing the running total and the accumulated stream.
+  def scan(s, initial, f) do
+    {_total, result} = foldr(s, ld({initial, cons(initial, [])}),
+      fn 
+      (x, lazy) ->
+        {val, acc} = lazy.()
+        head = f.(x, val)
+        {head, cons(head, acc)}
+      end
+    )
+    result
+  end
 end
